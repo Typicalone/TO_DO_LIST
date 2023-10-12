@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To-Do List App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <div class="container">
+        <div class="todo-app">
+            <h2>To-Do List <img src="back.png"></h2>
+            <div class="row">
+                <input type="text" id="input-box" placeholder="Add your text">
+                <button onclick="addTask()">Add task</button>
+            </div> 
+            <ul id="list-container">
+                <li class="checked">Task 1</li>
+                <li>Task 2</li>
+                <li>Task 3</li>
+                <li>Task 4</li>
+                <li>Task 5</li>
+            </ul>
+        </div>
+    </div>
+    <script>
+        const inputBox = document.getElementById("input-box");
+        const listContainer = document.getElementById("list-container");
+
+        function addTask() {
+            if (inputBox.value === '') {
+                alert("Add some task!");
+            } else {
+                const li = document.createElement("li");
+                const timestamp = getTimestamp();
+                li.innerHTML = `${inputBox.value} - ${timestamp}`;
+                listContainer.appendChild(li);
+
+                const span = document.createElement("span");
+                span.innerHTML = "\u00d7";
+                li.appendChild(span);
+            }
+            inputBox.value = "";
+            saveData();
+        }
+
+        listContainer.addEventListener("click", function (e) {
+            if (e.target.tagName === "LI") {
+                e.target.classList.toggle("checked");
+                saveData();
+            } else if (e.target.tagName === "SPAN") {
+                e.target.parentElement.remove();
+                saveData();
+            }
+        }, false);
+
+        function saveData() {
+            localStorage.setItem("data", listContainer.innerHTML);
+        }
+
+        function showTask() {
+            listContainer.innerHTML = localStorage.getItem("data");
+        }
+
+        function getTimestamp() {
+            const now = new Date();
+            const date = now.toDateString();
+            const time = now.toLocaleTimeString();
+            return `${date} ${time}`;
+        }
+
+        showTask();
+    </script>
+</div>
+
+</body>
+</html>
